@@ -1,4 +1,4 @@
-import  {useState} from 'react'
+import React, {useState} from 'react'
 import styles from './LandingPage.module.css';
 import Navbar from './Navbar';
 import Form from './Form';
