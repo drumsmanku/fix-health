@@ -1,4 +1,4 @@
-import  {useState ,useRef, useEffect } from 'react'
+import  {useState} from 'react'
 import styles from './LandingPage.module.css';
 import Navbar from './Navbar';
 import Form from './Form';
@@ -16,12 +16,12 @@ interface FormData {
 function LandingPage() {
   const [doctorsData, setDoctorsData] = useState<FormData[]>([]); 
   const [isFormPopupOpen, setIsFormPopupOpen] = useState(false);
-  const formPopupRef = useRef<HTMLDivElement>(null);
 
   const handleBookNowClick = () => {
     setIsFormPopupOpen(true);
   };
 
+  // This function will be triggered when clicking outside the `Form`
   const closePopup = () => {
     setIsFormPopupOpen(false);
   };
@@ -45,27 +45,6 @@ function LandingPage() {
       </div>
     ));
   };
-
-  useEffect(() => {
-
-    const handleWindowClick = (e: MouseEvent) => {
-
-      if (formPopupRef.current && formPopupRef.current.contains(e.target as Node)) {
-        return;
-      }
-     
-      closePopup();
-    };
-
-    if (isFormPopupOpen) {
-      window.addEventListener('mousedown', handleWindowClick);
-    }
-
-    return () => {
-      window.removeEventListener('mousedown', handleWindowClick);
-    };
-  }, [isFormPopupOpen]);
-
   return (
     <div className={styles.container}>
       <div className={styles.navbar}>

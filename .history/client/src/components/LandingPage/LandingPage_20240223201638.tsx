@@ -1,9 +1,8 @@
-import  {useState ,useRef, useEffect } from 'react'
+import  {useState} from 'react'
 import styles from './LandingPage.module.css';
 import Navbar from './Navbar';
 import Form from './Form';
 import Testimonials from './Testimonials';
-import FormPopup from './FormPopup';
 
 interface FormData {
   _id: string;
@@ -16,12 +15,12 @@ interface FormData {
 function LandingPage() {
   const [doctorsData, setDoctorsData] = useState<FormData[]>([]); 
   const [isFormPopupOpen, setIsFormPopupOpen] = useState(false);
-  const formPopupRef = useRef<HTMLDivElement>(null);
 
   const handleBookNowClick = () => {
     setIsFormPopupOpen(true);
   };
 
+  // This function will be triggered when clicking outside the `Form`
   const closePopup = () => {
     setIsFormPopupOpen(false);
   };
@@ -30,7 +29,6 @@ function LandingPage() {
 
   const handleFormSubmit = async (formData: FormData[]) => {
     setDoctorsData(formData); 
-    closePopup()
   };
 
   const renderDoctors = () => {
@@ -45,35 +43,14 @@ function LandingPage() {
       </div>
     ));
   };
-
-  useEffect(() => {
-
-    const handleWindowClick = (e: MouseEvent) => {
-
-      if (formPopupRef.current && formPopupRef.current.contains(e.target as Node)) {
-        return;
-      }
-     
-      closePopup();
-    };
-
-    if (isFormPopupOpen) {
-      window.addEventListener('mousedown', handleWindowClick);
-    }
-
-    return () => {
-      window.removeEventListener('mousedown', handleWindowClick);
-    };
-  }, [isFormPopupOpen]);
-
   return (
     <div className={styles.container}>
       <div className={styles.navbar}>
         <Navbar onBookNowClick={handleBookNowClick}/>
       </div>  
       {isFormPopupOpen && (
-        <div className={styles.popupContainer}  >
-          <FormPopup onFormSubmit={handleFormSubmit} />
+        <div className={styles.popupContainer} onClick={closePopup}>
+          <Form onFormSubmit={handleFormSubmit} />
         </div>
       )}
       <div className={styles.mainContent}>

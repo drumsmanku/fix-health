@@ -54,23 +54,10 @@
 }
 
 .imgImgDiv img {
-  width: 90%;
-  height: 90%;
+  width: 80%;
+  height: 80%;
   object-fit: cover;
   border-radius: 50%;
-}
-
-.popupContainer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Ensure it's above other content */
 }
 
 @media (max-width: 768px){
@@ -92,8 +79,8 @@
     
   }
   .imgDiv {
-    width: 35%; 
-    height: 35%; 
+    width: 35%; /* set your desired fixed size */
+    height: 35%; /* set your desired fixed size */
     overflow: hidden;
     border-radius: 50%;
     display: flex;
@@ -112,7 +99,7 @@
   }
   
   .imgImgDiv img {
-    width: 80%; 
+    width: 85%; 
     height: 100%; 
     object-fit: cover; 
     border-radius: 50%; 

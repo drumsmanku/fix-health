@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import styles from './Form.module.css';
-import { useLocation } from 'react-router-dom';
+import React, {useState, useRef} from 'react'
+import styles from './FormPopup.module.css'
 
 
 interface FormData {
@@ -13,9 +12,12 @@ interface FormData {
   previousExperience: boolean;
 }
 
+// interface FormProps {
+//   onFormSubmit: (data: FormData) => void;
+//   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void; 
+// }
+const FormPopup = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
 
-const Form = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
-  const location = useLocation();
   const [slideIndex, setSlideIndex] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -27,7 +29,7 @@ const Form = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
     previousExperience: false,
   });
   const [error, setError] = useState('');
-
+  const formRef = useRef<HTMLDivElement>(null);
   
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +39,9 @@ const Form = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
       [name]: type === 'checkbox' ? checked : value,
     });
     if (error) setError('');
+  };
+  const handleFormMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation(); 
   };
 
   const validateFields = (slide: number): boolean => {
@@ -73,19 +78,14 @@ const Form = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
   const isAgeLessThan40 = formData.age && parseInt(formData.age) < 40;
 
   const submitForm = async () => {
-    const queryString = location.search;
-    const queryParams = new URLSearchParams(queryString);
-    const urlCity = queryParams.get('city');
     if (validateFields(2)) {
       try {
-        const cityToSubmit = urlCity || formData.city; // This will use URL city if present, otherwise the one from the form
-        const submissionData = { ...formData, city: cityToSubmit };
         const response = await fetch('http://localhost:4000/submit-form', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(submissionData),
+          body: JSON.stringify(formData),
         });
         const data = await response.json();
         if (response.ok) {
@@ -112,6 +112,7 @@ const Form = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
       }
     }
   };
+ 
 
   const renderFormSlide = () => {
     switch(slideIndex) {
@@ -151,14 +152,13 @@ const Form = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
         return null;
     }
   };
-
   return (
-    <div className={styles.formContainer}>
+    <div ref={formRef} className={styles.formContainer} onMouseDown={handleFormMouseDown}>
       <h2>Book an appointment</h2>
       {showError()}
       {renderFormSlide()}
     </div>
-  );
-};
+  )
+}
 
-export default Form;
+export default FormPopup

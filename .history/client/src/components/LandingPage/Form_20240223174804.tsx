@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './Form.module.css';
-import { useLocation } from 'react-router-dom';
 
 
 interface FormData {
@@ -15,7 +14,6 @@ interface FormData {
 
 
 const Form = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
-  const location = useLocation();
   const [slideIndex, setSlideIndex] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -73,19 +71,14 @@ const Form = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
   const isAgeLessThan40 = formData.age && parseInt(formData.age) < 40;
 
   const submitForm = async () => {
-    const queryString = location.search;
-    const queryParams = new URLSearchParams(queryString);
-    const urlCity = queryParams.get('city');
     if (validateFields(2)) {
       try {
-        const cityToSubmit = urlCity || formData.city; // This will use URL city if present, otherwise the one from the form
-        const submissionData = { ...formData, city: cityToSubmit };
         const response = await fetch('http://localhost:4000/submit-form', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(submissionData),
+          body: JSON.stringify(formData),
         });
         const data = await response.json();
         if (response.ok) {

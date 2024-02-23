@@ -22,6 +22,7 @@ function LandingPage() {
     setIsFormPopupOpen(true);
   };
 
+  // This function will be triggered when clicking outside the `Form`
   const closePopup = () => {
     setIsFormPopupOpen(false);
   };
@@ -47,20 +48,22 @@ function LandingPage() {
   };
 
   useEffect(() => {
-
+    // Function to handle click events on the window
     const handleWindowClick = (e: MouseEvent) => {
-
+      // If the click is inside the form, do nothing
       if (formPopupRef.current && formPopupRef.current.contains(e.target as Node)) {
         return;
       }
-     
+      // Close the popup if the click is outside the form
       closePopup();
     };
-
+  
+    // If the popup is open, add the event listener
     if (isFormPopupOpen) {
       window.addEventListener('mousedown', handleWindowClick);
     }
-
+  
+    // Cleanup function to remove the event listener
     return () => {
       window.removeEventListener('mousedown', handleWindowClick);
     };
